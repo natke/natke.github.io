@@ -1,0 +1,90 @@
+Install torch-ort
+-----------------
+
+# Run in a Python environment
+
+* Default dependencies
+By default, torch-ort depends on PyTorch 1.8.1, ONNX Runtime 1.8 and CUDA 10.2.
+
+- Install CUDA 10.2
+
+- Install CuDNN 7.6
+
+- Install torch-ort and dependencies
+
+   pip install ninja
+   pip install torch-ort
+
+* Explicitly install for NVIDIA CUDA 10.2
+
+- Install CUDA 10.2
+
+- Install CuDNN 7.6
+
+- Install torch-ort and dependencies
+
+  pip install ninja
+  pip install torch==1.8.1
+  pip install --pre onnxruntime-training -f https://onnxruntimepackages.z14.web.core.windows.net/onnxruntime_nightly_cu102.html
+  pip install torch-ort
+
+* Explicitly install for NVIDIA CUDA 11.1
+
+- Install CUDA 11.1
+
+- Install CuDNN 8.0
+
+- Install torch-ort and dependencies
+
+  pip install ninja
+  pip install torch==1.8.1
+  pip install --pre onnxruntime-training -f https://onnxruntimepackages.z14.web.core.windows.net/onnxruntime_nightly_cu111.html
+  pip install torch-ort
+
+* Explicitly install for AMD ROCm 4.2
+
+- Install ROCm 4.2 base package (instructions)
+
+- Install ROCm 4.2 libraries (instructions)
+
+- Install ROCm 4.2 RCCL (instructions)
+
+- Install torch-ort and dependencies
+
+    pip install ninja
+    pip install --pre torch -f https://download.pytorch.org/whl/nightly/rocm4.2/torch_nightly.html
+    pip install --pre onnxruntime-training -f https://onnxruntimepackages.z14.web.core.windows.net/onnxruntime_nightly_rocm42.html
+    pip install torch-ort
+
+# Run using Docker
+On NVIDIA CUDA 11.1
+The docker directory contains dockerfiles for the NVIDIA CUDA 11.1 configuration.
+
+docker/Dockerfile.ort-cu111-cudnn8-devel-ubuntu18.04
+Build the docker image
+
+docker build -f Dockerfile.ort-cu111-cudnn8-devel-ubuntu18.04 -t ort.cu111 .
+
+Run the docker container using the image you have just built
+
+docker run -it --gpus all --name my-experiments ort.cu111:latest /bin/bash
+
+On AMD Rocm 4.2
+The docker directory contains dockerfiles for the NVIDIA CUDA 11.1 configuration.
+
+docker/Dockerfile.ort-rocm4.2-pytorch1.8.1-ubuntu18.04
+Build the docker image
+
+docker build -f Dockerfile.ort-rocm4.2-pytorch1.8.1-ubuntu18.04 -t ort.rocm42 .
+
+Run the docker container using the image you have just built
+
+docker run -it --rm \
+  --privileged \
+  --device=/dev/kfd \
+  --device=/dev/dri \
+  --group-add video \
+  --cap-add=SYS_PTRACE \
+  --security-opt seccomp=unconfined \
+  --name my-experiments \
+  ort.rocm42:latest /bin/bash
